@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class MemoryVacancyRepository implements VacancyRepository {
-     private static final MemoryVacancyRepository INSTANCE = new MemoryVacancyRepository();
+    private static final MemoryVacancyRepository INSTANCE = new MemoryVacancyRepository();
 
     private int nextId = 1;
 
@@ -16,7 +16,7 @@ public class MemoryVacancyRepository implements VacancyRepository {
 
     private MemoryVacancyRepository() {
         save(new Vacancy(0, "Intern Java Developer", "description1"));
-        save(new Vacancy(0, "Junior Java Developer",  "description2"));
+        save(new Vacancy(0, "Junior Java Developer", "description2"));
         save(new Vacancy(0, "Junior+ Java Developer", "description3"));
         save(new Vacancy(0, "Middle Java Developer", "description4"));
         save(new Vacancy(0, "Middle+ Java Developer", "description5"));
