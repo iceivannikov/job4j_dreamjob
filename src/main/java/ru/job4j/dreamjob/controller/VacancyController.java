@@ -3,6 +3,8 @@ package ru.job4j.dreamjob.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import ru.job4j.dreamjob.dto.FileDto;
 import ru.job4j.dreamjob.model.Vacancy;
 import ru.job4j.dreamjob.service.CityService;
 import ru.job4j.dreamjob.service.VacancyService;
@@ -33,9 +35,14 @@ public class VacancyController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute Vacancy vacancy) {
-        vacancyService.save(vacancy);
-        return "redirect:/vacancies";
+    public String create(@ModelAttribute Vacancy vacancy, @RequestParam MultipartFile file, Model model) {
+        try {
+            vacancyService.save(vacancy, new FileDto(file.getOriginalFilename(), file.getBytes()));
+            return "redirect:/vacancies";
+        } catch (Exception exception) {
+            model.addAttribute("message", exception.getMessage());
+            return "errors/vacancies/404";
+        }
     }
 
     @GetMapping("/{id}")
@@ -50,12 +57,17 @@ public class VacancyController {
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute Vacancy vacancy, Model model) {
-        var isUpdated = vacancyService.update(vacancy);
-        if (!isUpdated) {
-            return getError(model);
+    public String update(@ModelAttribute Vacancy vacancy, @RequestParam MultipartFile file, Model model) {
+        try {
+            var isUpdated = vacancyService.update(vacancy, new FileDto(file.getOriginalFilename(), file.getBytes()));
+            if (!isUpdated) {
+                return getError(model);
+            }
+            return "redirect:/vacancies";
+        } catch (Exception exception) {
+            model.addAttribute("message", exception.getMessage());
+            return "errors/vacancies/404";
         }
-        return "redirect:/vacancies";
     }
 
     @GetMapping("/delete/{id}")

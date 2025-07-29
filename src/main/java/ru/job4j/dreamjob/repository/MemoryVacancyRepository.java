@@ -14,22 +14,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Repository
 public class MemoryVacancyRepository implements VacancyRepository {
 
-    private final AtomicInteger nextId = new AtomicInteger(1);
+    private final AtomicInteger nextId = new AtomicInteger(0);
 
     private final ConcurrentMap<Integer, Vacancy> vacancies = new ConcurrentHashMap<>();
 
     private MemoryVacancyRepository() {
-        save(new Vacancy(0, "Intern Java Developer", "description1", true, 1));
-        save(new Vacancy(0, "Junior Java Developer", "description2", true, 3));
-        save(new Vacancy(0, "Junior+ Java Developer", "description3", true, 3));
-        save(new Vacancy(0, "Middle Java Developer", "description4",  true, 2));
-        save(new Vacancy(0, "Middle+ Java Developer", "description5", true, 1));
-        save(new Vacancy(0, "Senior Java Developer", "description6", false, 2));
+        save(new Vacancy(0, "Intern Java Developer", "description1", true, 1, 0));
+        save(new Vacancy(0, "Junior Java Developer", "description2", true, 3, 0));
+        save(new Vacancy(0, "Junior+ Java Developer", "description3", true, 3, 0));
+        save(new Vacancy(0, "Middle Java Developer", "description4",  true, 2, 0));
+        save(new Vacancy(0, "Middle+ Java Developer", "description5", true, 1, 0));
+        save(new Vacancy(0, "Senior Java Developer", "description6", false, 2, 0));
     }
 
     @Override
     public Vacancy save(Vacancy vacancy) {
-        vacancy.setId(nextId.getAndIncrement());
+        vacancy.setId(nextId.incrementAndGet());
         vacancies.put(vacancy.getId(), vacancy);
         return vacancy;
     }
@@ -47,7 +47,8 @@ public class MemoryVacancyRepository implements VacancyRepository {
                         vacancy.getTitle(),
                         vacancy.getDescription(),
                         vacancy.getVisible(),
-                        vacancy.getCityId())
+                        vacancy.getCityId(),
+                        vacancy.getFileId())
         ) != null;
     }
 

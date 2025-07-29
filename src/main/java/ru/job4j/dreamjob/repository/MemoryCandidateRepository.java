@@ -13,22 +13,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Repository
 public class MemoryCandidateRepository implements CandidateRepository {
 
-    private final AtomicInteger nextId = new AtomicInteger(1);
+    private final AtomicInteger nextId = new AtomicInteger(0);
 
     private final ConcurrentMap<Integer, Candidate> candidates = new ConcurrentHashMap<>();
 
     private MemoryCandidateRepository() {
-        save(new Candidate(0, "Ivan", "description1"));
-        save(new Candidate(0, "Vasiliy", "description2"));
-        save(new Candidate(0, "Alexsandr", "description3"));
-        save(new Candidate(0, "Kostya", "description4"));
-        save(new Candidate(0, "Andrey", "description5"));
-        save(new Candidate(0, "Oleg", "description6"));
+        save(new Candidate(0, "Ivan", "description1", 0));
+        save(new Candidate(0, "Vasiliy", "description2", 0));
+        save(new Candidate(0, "Alexsandr", "description3", 0));
+        save(new Candidate(0, "Kostya", "description4", 0));
+        save(new Candidate(0, "Andrey", "description5", 0));
+        save(new Candidate(0, "Oleg", "description6", 0));
     }
 
     @Override
     public Candidate save(Candidate candidate) {
-        candidate.setId(nextId.getAndIncrement());
+        candidate.setId(nextId.incrementAndGet());
         candidates.put(candidate.getId(), candidate);
         return candidate;
     }
@@ -44,7 +44,8 @@ public class MemoryCandidateRepository implements CandidateRepository {
                 (id, oldCandidate) -> new Candidate(
                         oldCandidate.getId(),
                         candidate.getName(),
-                        candidate.getDescription())
+                        candidate.getDescription(),
+                        candidate.getFileId())
         ) != null;
     }
 
