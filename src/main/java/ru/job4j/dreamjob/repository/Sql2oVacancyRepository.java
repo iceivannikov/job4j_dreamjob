@@ -41,10 +41,8 @@ public class Sql2oVacancyRepository implements VacancyRepository {
         try (var connection = sql2o.open()) {
             var query = connection.createQuery("DELETE FROM vacancies WHERE id = :id");
             query.addParameter("id", id);
-            query.executeUpdate();
             int affectedRows = query.executeUpdate().getResult();
             return affectedRows > 0;
-
         }
     }
 
