@@ -50,14 +50,15 @@ public class Sql2oCandidateRepository implements CandidateRepository {
         try (Connection connection = sql2o.open()) {
             var sql = """
                     UPDATE candidates
-                    SET name = :name, description = :description, creation_date = :creationDate,  file_id = :fileId
+                    SET name = :name, description = :description, creation_date = :creationDate, file_id = :fileId
                     WHERE id = :id
                     """;
             var query = connection.createQuery(sql, true)
                     .addParameter("name", candidate.getName())
                     .addParameter("description", candidate.getDescription())
                     .addParameter("creationDate", candidate.getCreationDate())
-                    .addParameter("fileId", candidate.getFileId());
+                    .addParameter("fileId", candidate.getFileId())
+                    .addParameter("id", candidate.getId());
             int affectedRows = query.executeUpdate().getResult();
             return affectedRows > 0;
         }

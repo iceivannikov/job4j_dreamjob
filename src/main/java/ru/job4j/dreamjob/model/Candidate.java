@@ -30,6 +30,14 @@ public class Candidate {
         this.fileId = fileId;
     }
 
+    public Candidate(int id, String title, String description, LocalDateTime creationDate, int fileId) {
+        this.id = id;
+        this.name = title;
+        this.description = description;
+        this.creationDate = creationDate;
+        this.fileId = fileId;
+    }
+
     public int getId() {
         return id;
     }

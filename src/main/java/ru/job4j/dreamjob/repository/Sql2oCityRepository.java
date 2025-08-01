@@ -14,6 +14,7 @@ public class Sql2oCityRepository implements CityRepository {
     public Sql2oCityRepository(Sql2o sql2o) {
         this.sql2o = sql2o;
     }
+
     @Override
     public Collection<City> findAll() {
         try (var connection = sql2o.open()) {
