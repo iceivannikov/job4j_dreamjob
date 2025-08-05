@@ -12,6 +12,9 @@
         <li><a th:href="@{/candidates/create}">Создать резюме</a></li>
     </ul>
 </div>
+<div th:if="${successMessage}" class="alert alert-success" role="alert">
+    <span th:text="${successMessage}"></span>
+</div>
 <footer th:include="fragments/footer :: footer"></footer>
 </body>
 </html>
