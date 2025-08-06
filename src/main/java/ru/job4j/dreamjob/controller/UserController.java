@@ -8,16 +8,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.job4j.dreamjob.model.User;
-import ru.job4j.dreamjob.repository.UserRepository;
+import ru.job4j.dreamjob.service.UserService;
 
 @Controller
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/register")
@@ -28,12 +28,27 @@ public class UserController {
 
     @PostMapping("/register")
     public String register(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
-        var optionalUser = userRepository.save(user);
+        var optionalUser = userService.save(user);
         if (optionalUser.isEmpty()) {
             redirectAttributes.addFlashAttribute("errormessage", "Пользователь с таким email уже существует");
             return "redirect:/users/register";
         }
         redirectAttributes.addFlashAttribute("successMessage", "Регистрация прошла успешно");
         return "redirect:/index";
+    }
+
+    @GetMapping("/login")
+    public String getLoginPage() {
+        return "users/login";
+    }
+
+    @PostMapping("/login")
+    public String loginUser(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
+        var userOptional = userService.findByEmailAndPassword(user.getEmail(), user.getPassword());
+        if (userOptional.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errormessage", "Почта или пароль введены неверно");
+            return "redirect:/users/login";
+        }
+        return "redirect:/vacancies";
     }
 }
