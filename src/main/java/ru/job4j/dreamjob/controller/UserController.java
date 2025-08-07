@@ -1,5 +1,7 @@
 package ru.job4j.dreamjob.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,12 +45,19 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String loginUser(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
+    public String loginUser(@ModelAttribute User user, RedirectAttributes redirectAttributes, HttpServletRequest request) {
         var userOptional = userService.findByEmailAndPassword(user.getEmail(), user.getPassword());
         if (userOptional.isEmpty()) {
             redirectAttributes.addFlashAttribute("errormessage", "Почта или пароль введены неверно");
             return "redirect:/users/login";
         }
+        request.getSession().setAttribute("user", userOptional.get());
         return "redirect:/vacancies";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/users/login";
     }
 }
